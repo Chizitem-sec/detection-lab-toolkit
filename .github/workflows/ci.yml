@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install flake8
+        run: pip install -r requirements-dev.txt
+      - name: Run flake8
+        run: flake8 lab_mgmt.py lab_monitoring.py lab_hardening.py
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run pytest
+        run: pytest tests/ -v
+
+  dry-run-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate CLI help and dry-run subcommands
+        run: |
+          python3 lab_mgmt.py --help
+          python3 lab_monitoring.py --help
+          python3 lab_hardening.py --help
+          python3 lab_mgmt.py --dry-run service restart apache2
+          python3 lab_monitoring.py --dry-run alerts-rule 18101
+          python3 lab_hardening.py --dry-run audit-enable
