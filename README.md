@@ -1,6 +1,5 @@
 # OSSEC & Gophish Lab Toolkit
 
-![CI](https://github.com/Chizitem-sec/detection-lab-toolkit/actions/workflows/ci.yml/badge.svg)
 
 Operational command-line tools for blue-team security lab environments. Consolidated Python CLIs for OSSEC HIDS deployment, monitoring, and hardening on Ubuntu/Debian + Windows 11. Built from production bash and PowerShell scripts used in home lab attack simulation and detection exercises.
 
